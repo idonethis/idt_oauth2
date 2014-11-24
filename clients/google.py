@@ -5,6 +5,12 @@ import json
 
 from django.conf import settings
 
+# support override of this variable to make testing easier
+try:
+    settings.GOOGLE_DOMAIN
+except AttributeError:
+    settings.GOOGLE_DOMAIN='https://accounts.google.com'
+
 OAUTH2_AUTHORIZE_URL = '%s/o/oauth2/auth' % settings.GOOGLE_DOMAIN
 OAUTH2_TOKEN_EXCHANGE_URL = '%s/o/oauth2/token' % settings.GOOGLE_DOMAIN
 
