@@ -1,9 +1,12 @@
 Simple OAuth2 integration app
 
 * add the app to the INSTALLED_APPS settings
-* add urls to the urls configuration `url(r'^', include('oauth2.urls'))`
+* add urls to the urls configuration `url(r'^', include('idt_oauth2.urls'))`
 * define a OAUTH2_APP_POST_AUTHORIZE_VIEW string setting and point to a view in your app
   `OAUTH2_APP_POST_AUTHORIZE_VIEW='core.views.oauth2_token'`
+* define a OAUTH2_APP_ENABLED_CLIENTS setting, it should be an array of strings
+  indicating the oauth2 clients you want to be enabled
+  `OAUTH2_APP_ENABLED_CLIENTS=['idonethis', 'slack ']`
 * implement the view defined in the previous step with this signature:
 `def oauth2_token(request, service_name, token_data=None, error=None):`
 * define clients under oauth2/clients/SERVICENAME.py and define:

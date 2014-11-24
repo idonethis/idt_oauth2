@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.shortcuts import redirect
 from django.http import HttpResponse, Http404
-from django.contrib.sites.requests import RequestSite
 from django.core.urlresolvers import reverse
 
 import string
@@ -9,11 +8,12 @@ import random
 import urllib
 import importlib
 
-from core.views import oauth2_token as oauth2_token_view
 
 def oauth2_authorize(request, service_name):
+    redirect_uri = request.build_absolute_uri(reverse('oauth2_callback'))
+
     client = get_oauth2_client(service_name)
-    service_url, query_params = client.get_authorize_config()
+    service_url, query_params = client.get_authorize_config(redirect_uri)
 
     random_state_string = generate_random_state_string()
 
@@ -54,9 +54,7 @@ def oauth2_callback(request):
 
     client = get_oauth2_client(service_name)
 
-    redirect_uri = '%s://%s%s' % (
-        request.scheme, RequestSite(request).domain,
-        reverse('oauth2_callback'))
+    redirect_uri = request.build_absolute_uri(reverse('oauth2_callback'))
 
     token_data = client.token_exchange(request.GET['code'], redirect_uri)
 
@@ -68,7 +66,7 @@ def get_oauth2_client(service_name):
         if service_name not in settings.OAUTH2_APP_ENABLED_CLIENTS:
             raise OAuth2ClientNotEnabled()
 
-        client_name = "oauth2.clients.%s" % service_name
+        client_name = "idt_oauth2.clients.%s" % service_name
         return importlib.import_module(client_name)
     except ImportError, e:
         raise raise_404_or_devfriendly_exception(e)

@@ -7,7 +7,7 @@ from django.conf import settings
 OAUTH2_AUTHORIZE_URL = '%s/api/oauth2/authorize/' % settings.IDT_DOMAIN
 OAUTH2_TOKEN_EXCHANGE_URL = '%s/api/oauth2/token/' % settings.IDT_DOMAIN
 
-def get_authorize_config():
+def get_authorize_config(redirect_uri):
     service_url = OAUTH2_AUTHORIZE_URL
     query_params = {
         'client_id': settings.IDT_OAUTH2_CLIENT_ID,
